@@ -1,5 +1,8 @@
 _base_ = '../configs/faster_rcnn/faster_rcnn_r50_fpn_1x_coco.py'
 
+# img_scale = (2592, 1944) 
+img_scale = (1270, 970)
+
 model = dict(
     roi_head=dict(
         bbox_head=dict(
@@ -21,8 +24,9 @@ train_pipeline = [
     dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='Resize',
-        img_scale=[(1333, 640), (1333, 672), (1333, 704), (1333, 736),
-                   (1333, 768), (1333, 800)],
+        # img_scale=[(1333, 640), (1333, 672), (1333, 704), (1333, 736),
+        #            (1333, 768), (1333, 800)],
+        img_scale=img_scale,
         multiscale_mode='value',
         keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.5),
@@ -35,7 +39,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
+        img_scale=img_scale,
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -50,7 +54,7 @@ test_pipeline = [
 # learning policy
 optimizer = dict(lr = 0.02/8)
 lr_config = dict(warmup = None)
-log_config = dict(interval=10)         
+log_config = dict(interval=1)         
 
 evaluation = dict(metric = ['bbox'],
                 interval = 10)
@@ -58,10 +62,10 @@ checkpoint_config = dict(interval = 10)
 # classes = ('Juvenile',)
 classes = ('Hatched', 'Unhatched', 'Juvenile')
 
-data_root = "demo/200224"
+data_root = "data/200224"
 data = dict(
-    workers_per_gpu=3,
-    samples_per_gpu=3,
+    workers_per_gpu=2,
+    samples_per_gpu=2,
     train=dict(
         pipeline=train_pipeline,
         img_prefix=f'{data_root}/training/images',
@@ -83,4 +87,4 @@ seed = 0
 runner = dict(max_epochs=50)
 # data_root = '../data/2022_02_14_coco_format_select_vids/'
 load_from = 'demo/checkpoints/mask_rcnn_r50_caffe_fpn_mstrain-poly_3x_coco_bbox_mAP-0.408__segm_mAP-0.37_20200504_163245-42aa3d00.pth'
-work_dir = 'work_dir/juvenile_hatched_unhatched_b_3'
+work_dir = 'work_dir/juvenile_hatched_unhatched_b_2_half_res'

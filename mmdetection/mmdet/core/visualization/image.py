@@ -134,7 +134,7 @@ def imshow_det_bboxes(img,
             f'{label_text}',
             bbox={
                 'facecolor': 'black',
-                'alpha': 0.8,
+                'alpha': 0.4,
                 'pad': 0.7,
                 'edgecolor': 'none'
             },
@@ -159,7 +159,7 @@ def imshow_det_bboxes(img,
     rgb, alpha = np.split(img_rgba, [3], axis=2)
     img = rgb.astype('uint8')
     img = mmcv.rgb2bgr(img)
-
+    print("IIIII WAS HERE")
     if show:
         # We do not use cv2 for display because in some cases, opencv will
         # conflict with Qt, it will output a warning: Current thread
